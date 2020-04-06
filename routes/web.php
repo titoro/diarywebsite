@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('hello','HelloController@index');
+Route::post('hello','HelloController@post');
+Route::get('user','UserController@index');
+Route::get('/dayschedule', 'DayScheduleController@index');
+Route::get('/dayschedule/{id}', 'DayScheduleController@create');
+Route::match(['get', 'post'],'dayschedule/insert', 'DayScheduleController@insert');

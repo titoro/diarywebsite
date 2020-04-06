@@ -107,11 +107,11 @@
 <link href='{{ asset('/css/daygrid/main.css') }}' rel='stylesheet' />
 <link href='{{ asset('/css/timegrid/main.css') }}' rel='stylesheet' />
 <link href='{{ asset('/css/list/main.css') }}' rel='stylesheet' />
-<script src='{{ asset('/css/core/main.js') }}'></script>
-<script src='{{ asset('/css/interaction/main.js') }}'></script>
-<script src='{{ asset('/css/daygrid/main.js') }}'></script>
-<script src='{{ asset('/css/timegrid/main.js') }}'></script>
-<script src='{{ asset('/css/list/main.js') }}'></script>
+<script src='{{ asset('/js/core/main.js') }}'></script>
+<script src='{{ asset('/js/interaction/main.js') }}'></script>
+<script src='{{ asset('/js/daygrid/main.js') }}'></script>
+<script src='{{ asset('/js/timegrid/main.js') }}'></script>
+<script src='{{ asset('/js/list/main.js') }}'></script>
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
