@@ -15,7 +15,7 @@
 
     <a href="{{ action('DayScheduleController@create', 1) }}">スケジュールを登録する</a>
   </header>
-  
+
   <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
     <div class="cd-schedule__timeline">
       <ul>
@@ -38,9 +38,6 @@
         <li><span>17:00</span></li>
         <li><span>17:30</span></li>
         <li><span>18:00</span></li>
-        <li><span>18:30</span></li>
-        <li><span>19:00</span></li>
-        <li><span>19:30</span></li>
       </ul>
     </div> <!-- .cd-schedule__timeline -->
   
@@ -97,19 +94,6 @@
                 <em class="cd-schedule__name">Yoga Level 1</em>
               </a>
             </li>
-          </ul>
-        </li>
-
-        <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span>テスト</span></div>
-          <ul>
-          @foreach($day_schedules as $day_schedule)
-            <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($day_schedule->from_time))}}" data-end="{{date('H:i',strtotime($day_schedule->to_time))}}"  data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">{{$day_schedule->contents->text}}</em>
-              </a>
-            </li>
-          @endforeach
           </ul>
         </li>
   

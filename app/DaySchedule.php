@@ -14,20 +14,12 @@ class DaySchedule extends Model
     /**
      * create()やupdate()で入力を受け付ける ホワイトリスト
      */
-
-    // guardedを使用するようにする
     protected $fillable = [ 'id',
-                            'date',
                             'from_time', 
                             'to_time',
                             'content_id',
                             'created',
-                            'modified'
-    ];
-
-    // protected $guarded = [
-    //                         'id',
-    // ];
+                            'modified'];
 
     // or
 
