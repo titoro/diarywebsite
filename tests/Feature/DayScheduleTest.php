@@ -60,9 +60,9 @@ class DayScheduleTest extends TestCase
         // $this->assertDatabaseHas('contents', $this->attributes);
 
         $this->attributes = [
-            'id'            => '1',
-            'from_time'     => '2020-03-01 17:00:00',
-            'to_time'       => '2020-03-01 18:00:00',
+            // 'id'            => '1',
+            'from_time'     => '17:00:00',
+            'to_time'       => '18:00:00',
             'content_id'    => '1',
         ];
         DaySchedule::create($this->attributes);
@@ -110,7 +110,7 @@ class DayScheduleTest extends TestCase
         $this->post('/dayschedule/insert', [
                                             'start-time'=>'09:00',
                                             'end-time' =>'10:00',
-                                            'naiyo' => 'test schedule'
+                                            'naiyo' => 'test'
                                             ]);
         $this->assertCount(1, DaySchedule::all());
     }
@@ -120,15 +120,17 @@ class DayScheduleTest extends TestCase
      */
     public function testGetContentsByDay(){
         // 確認に必要なパラメータ
-        $id                     = 100000;
-        $from_time              = "2020-03-21 11:00:00";
-        $to_time                = "2020-03-21 12:00:00";
+        // $id                     = 100000;
+        $date                   = '2020-04-08';
+        $from_time              = "11:00:00";
+        $to_time                = "12:00:00";
         $title                  = "test title";
         $text                   = "test text";
         $comment                = "test comment";
 
         $result_hikaku_array = [
-                                    'id' => $id,
+                                    'id' => 1,
+                                    'date' => $date,
                                     'from_time' => $from_time,
                                     'to_time' => $to_time,
                                     'title' => $title,
@@ -137,22 +139,22 @@ class DayScheduleTest extends TestCase
         ];
 
         $daySchedule = new DaySchedule();
-        $daySchedule->id = 1;
-        $daySchedule->content_id = $id;
+        // $daySchedule->id = 1;
+        $daySchedule->date = $date;
+        $daySchedule->content_id = 1;
         $daySchedule->from_time = $from_time;
         $daySchedule->to_time = $to_time;
         $daySchedule->save();
 
-        
         $content = new Content();
-        $content->id = $id;
+        $content->id = 1;
         $content->title = $title;
         $content->text = $text;
         $content->comment = $comment;
         $content->save();
 
         $daySchedule = new DaySchedule();
-        $result = $daySchedule->select(['contents.id','from_time','to_time','title','text','comment'])
+        $result = $daySchedule->select(['contents.id','date','from_time','to_time','title','text','comment'])
                               ->join('contents','day_schedules.content_id','=','contents.id')
                               ->get()
                               ->toArray();
@@ -163,23 +165,25 @@ class DayScheduleTest extends TestCase
     /** 1日のスケジュールを取得できるかをリレーションで確認 */
     public function testGetContentsByDayByRelation(){
         // 確認に必要なパラメータ
-        $id                     = 100000;
-        $from_time              = "2020-03-21 11:00:00";
-        $to_time                = "2020-03-21 12:00:00";
+        // $id                     = 100000;
+        $date                   = '2020-04-08';
+        $from_time              = "11:00:00";
+        $to_time                = "12:00:00";
         $title                  = "test title";
         $text                   = "test text";
         $comment                = "test comment";
 
         $day_schedule_array = [
-                                'id' => 1,
-                                'content_id' => $id,
+                                // 'id' => 1,
+                                'date' => $date,
+                                'content_id' => 1,
                                 'from_time' => $from_time,
                                 'to_time' => $to_time,
 
         ];
 
         $content_array = [
-                                'id' => $id,
+                                'id' => 1,
                                 'title' => $title,
                                 'text' => $text,
                                 'comment' => $comment
@@ -207,10 +211,19 @@ class DayScheduleTest extends TestCase
         $ds1->contents()->create($content_array);
 
         DB::enableQueryLog();
-
         $daySchedule = new DaySchedule();
-        $result = DaySchedule::with('contents')->find(1)->toArray();
+        // $result = DaySchedule::with('contents')->find(1)->toArray();
+        $result = DaySchedule::with('contents')->where('content_id',1)->first()->toArray();
+        // var_dump($result);
+        // dd(DB::getQueryLog());
 
+        // DB::enableQueryLog();
+        // $daySchedule = new DaySchedule();
+        // // $result = DaySchedule::with('contents')->find(1)->toArray();
+        // $result = DaySchedule::all();
+        // // dd(DB::getQueryLog());
+        // dd($result);
+        
         // dumpする
         // var_dump(DB::getQueryLog());
 
@@ -221,7 +234,8 @@ class DayScheduleTest extends TestCase
         // var_dump($result['contents']);
 
         // 便宜的にfrom_timeとtitleの値をテストしている（あとで変更するかも）
-        $this->assertEquals("2020-03-21 11:00:00", $result['from_time']);
+        $this->assertEquals("11:00:00", $result['from_time']);
         $this->assertEquals("test title", $result['contents']['title']);
+        // $this->assertEquals("11:00:00", '11:00:00');
     }
 }
