@@ -13,7 +13,13 @@ class DayScheduleController extends Controller
         $hello = 'Hello,World!';
         $hello_array = ['Hello', 'こんにちは', 'ニーハオ'];
 
-        return view('dayschedule.index', compact('hello', 'hello_array'));
+        // 1日のスケジュールを全て取得
+        $daySchedule = new DaySchedule();
+        // $result = DaySchedule::with('contents')->find(1)->toArray();
+        $day_schedules = DaySchedule::with('contents')->where('date','2020-04-08')->orderBy('from_time')->get();
+        // var_dump($day_schedules);
+
+        return view('dayschedule.index', compact('day_schedules', 'day_schedules'));
     }
 
     public function create(){
@@ -28,15 +34,15 @@ class DayScheduleController extends Controller
         var_dump($request->input('end-time'));
 
         $day_schedule_array = [
-            'id' => 2,
-            'content_id' => 2,
+            'id' => 4,
+            'content_id' => 4,
             'from_time' => date('Y-m-d'). " ". $request->input('start-time').':00',
             'to_time' => date('Y-m-d'). " ". $request->input('end-time').':00',
 
         ];
 
         $content_array = [
-            'id' => 2,
+            'id' => 4,
             'title' => 'test',
             'text' => $request->input('start-time'),
             'comment' => 'test'
