@@ -117,6 +117,10 @@
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
+    // デフォルトで表示するのは本日日付にする
+    var today = new Date();
+    // console.log(today);
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
       height: 'parent',
@@ -126,7 +130,7 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       },
       defaultView: 'dayGridMonth',
-      defaultDate: '2019-08-12',
+      defaultDate: today,
       navLinks: true, // can click day/week names to navigate views
       editable: true,
       eventLimit: true, // allow "more" link when too many events
@@ -221,7 +225,7 @@
 </style>
 </head>
 <body>
-
+  <div id="user">test user</div>
   <div id='calendar-container'>
     <div id='calendar'></div>
   </div>

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DaySchedule extends Model
+class Schedule extends Model
 {
     // protected $visible = ['id', 'content_id'];
     const CREATED_AT = 'created';
@@ -16,13 +16,16 @@ class DaySchedule extends Model
      */
 
     // guardedを使用するようにする
-    protected $fillable = [ 'id',
-                            'date',
-                            'from_time', 
-                            'to_time',
-                            'content_id',
-                            'created',
-                            'modified'
+    // protected $fillable = [ 'id',
+    //                         'date',
+    //                         'from_time', 
+    //                         'to_time',
+    //                         'content_id',
+    //                         'created',
+    //                         'modified'
+    // ];
+
+    protected $guarded = [ 'id',
     ];
 
     // protected $guarded = [
@@ -39,6 +42,6 @@ class DaySchedule extends Model
     Public function contents(){
         // ここhasOne?hasMany?
         // 考えたらhasOneのような気がしたのでhasOneにしている
-        return $this->hasOne('App\Content','id', 'content_id');
+        // return $this->hasOne('App\Content','id', 'content_id');
     }
 }

@@ -46,7 +46,7 @@ class UserTest extends TestCase
         $this->attributes = [
             'name'     => 'テスト太郎',
             'email'     => 'hoge@example.com',
-            'password' => bcrypt('test'),
+            // 'password' => bcrypt('test'),
         ];
     }
 

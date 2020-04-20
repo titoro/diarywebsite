@@ -86,7 +86,9 @@
 		for(var i = 0; i < this.singleEvents.length; i++) {
 			// open modal when user selects an event
 			this.singleEvents[i].addEventListener('click', function(event){
+				console.dir(event);
 				event.preventDefault();
+				console.dir(this.getElementsByTagName('a')[0]);
 				if(!self.animating) self.openModal(this.getElementsByTagName('a')[0]);
 			});
 		}
@@ -301,14 +303,19 @@
 	      }
 	    }
 		};
-		httpRequest.open('GET', content+'.html');
-    httpRequest.send();
+		// httpRequest.open('GET', content+'.html');
+		//ここは要検証!
+		console.dir(content);
+		// content = "schedule/" + content;
+		httpRequest.open('GET', content);
+    	httpRequest.send();
 	};
 
 	ScheduleTemplate.prototype.getEventContent = function(string) {
 		// reset the loaded event content so that it can be inserted in the modal
 		var div = document.createElement('div');
 		div.innerHTML = string.trim();
+		console.dir(div.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML);
 		return div.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML;
 	};
 
