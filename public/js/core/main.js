@@ -380,9 +380,44 @@ Docs & License: https://fullcalendar.io/
     // ----------------------------------------------------------------------------------------------------------------
     function listenBySelector(container, eventType, selector, handler) {
         function realHandler(ev) {
+            // location.href = 'http://192.168.10.10/schedule';
+            // console.log('eventType is ' + eventType);
+            // console.log('container is ' + container);
+            // console.log('selecter is ' + selector);
+            // console.log('handler is ' + handler);
+
+            if(eventType === 'click'){
+                // location.href = 'http://192.168.10.10/schedule';
+            }
             var matchedChild = elementClosest(ev.target, selector);
+            console.dir(matchedChild);
+            // console.log(typeof(matchedChild));
+            var date = "";
+            var user = "";
+            if(matchedChild){
+                console.dir(JSON.parse(matchedChild['dataset']['goto']).date);
+                // for ( var n in matchedChild['dataset']['goto'] ) {
+                //     // ...
+                //     console.log(n);
+                // } 
+                console.log(typeof(matchedChild['dataset']['goto']));
+                date = JSON.parse(matchedChild['dataset']['goto']).date;
+                console.dir(document.getElementById("user").innerHTML);
+                user = document.getElementById("user").innerHTML;
+            }
+            for ( var n in matchedChild ) {
+                // ...
+                // console.log(matchedChild[n]);
+            } 
             if (matchedChild) {
-                handler.call(matchedChild, ev, matchedChild);
+                // console.log('selector is' + selector);
+                if(eventType !== 'click'){
+                    handler.call(matchedChild, ev, matchedChild);
+                }else{
+                    // クリック時の対応（ここは独自につけた）
+                    location.href = 'http://192.168.10.10/schedule?date=' + date + "&user=" + user;
+                }
+                // handler.call(matchedChild, ev, matchedChild);
             }
         }
         container.addEventListener(eventType, realHandler);
@@ -6617,7 +6652,10 @@ Docs & License: https://fullcalendar.io/
             var _this = this;
             // event delegation for nav links
             this.removeNavLinkListener = listenBySelector(this.el, 'click', 'a[data-goto]', function (ev, anchorEl) {
+                 // 独自に変更
+                // location.href = 'http://192.168.10.10/schedule';
                 var gotoOptions = anchorEl.getAttribute('data-goto');
+                console.log(gotoOptions);
                 gotoOptions = gotoOptions ? JSON.parse(gotoOptions) : {};
                 var dateEnv = _this.dateEnv;
                 var dateMarker = dateEnv.createMarker(gotoOptions.date);

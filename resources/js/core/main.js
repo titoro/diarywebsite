@@ -380,6 +380,8 @@ Docs & License: https://fullcalendar.io/
     // ----------------------------------------------------------------------------------------------------------------
     function listenBySelector(container, eventType, selector, handler) {
         function realHandler(ev) {
+            location.href = 'http://192.168.10.10/schedule';
+            // console.log(eventType);
             var matchedChild = elementClosest(ev.target, selector);
             if (matchedChild) {
                 handler.call(matchedChild, ev, matchedChild);
@@ -6617,6 +6619,9 @@ Docs & License: https://fullcalendar.io/
             var _this = this;
             // event delegation for nav links
             this.removeNavLinkListener = listenBySelector(this.el, 'click', 'a[data-goto]', function (ev, anchorEl) {
+                // 独自に変更
+                // location.href = 'http://192.168.10.10/schedule';
+                console.log("click button");
                 var gotoOptions = anchorEl.getAttribute('data-goto');
                 gotoOptions = gotoOptions ? JSON.parse(gotoOptions) : {};
                 var dateEnv = _this.dateEnv;
