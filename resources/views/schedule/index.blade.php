@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <head>
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
@@ -60,6 +61,12 @@
   .form-horizontal{
     margin-left: 10px;
   }
+  button{
+    display:inline-block;
+  }
+  /* div{
+    text-align:center;
+  } */
 </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,6 +78,101 @@
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 <script>  
+function CSVOutput(){
+                    var flag = false; // 選択されているか否かを判定する変数
+
+                    var result = new Array();
+ 
+                    // for (var i = 0; i < document.form1.riyu.length; i++) {
+
+                    //   // i番目のチェックボックスがチェックされているかを判定
+                    //   if (document.form1.riyu[i].checked) {
+                    //     flag = true;    
+                    //     // alert(document.form1.fruits[i].value + "が選択されました。");
+                    //     result[i] = document.form1.riyu[i].value;
+                    //   }
+                    // }
+
+                    let user_id = document.form1.user_id.value;
+                    // alert(user_id);
+                    result['user_id'] = user_id; 
+                    // console.log(result);
+                    // alert("debug");
+                    $.ajax({
+                        type:'POST', //GETかPOSTか
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, 
+                        url:'{{ action('AjaxReturnAnalystController@ajax_sample', 1) }}',//url+ファイル名 .htmlは省略可
+                        dataType:'json',//他にjsonとか選べるとのこと
+                        // data:JSON.stringify(result),
+                        data: {'user_id': user_id},
+                        _token: '{{ csrf_token() }}' 
+                    }).done(function (results){
+                        //$('#text').html(results);//展開したいタグのidを指定
+                        // console.log(results);
+                        alert(results);
+                        alert(results['count'] + "件あります");
+                        var token = document.getElementsByName('csrf-token').item(0).content;
+                        // console.log(token);
+
+                        /* XMLHttpRequestの例
+                        xhr = new XMLHttpRequest();
+                        // 直接POST送信する例
+                        xhr.open('POST', 'http://192.168.10.10', true);
+                        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                        var token = document.getElementsByName('csrf-token').item(0).content;
+                        xhr.setRequestHeader('X-CSRF-Token', token); 
+                        // フォームに入力した値をリクエストとして設定
+                        var request = "";
+                        for(i = 0; i < result.length; i++){
+                          if(i === 0){
+                            request = "result[]=" + results[i];
+                          }else{
+                            request += "&result[]=" + result[i];
+                          }
+                        }
+                        // xhr.send(request);
+                        xhr.send();
+                        */
+                        
+                        // フォームの生成
+                        var form = document.createElement("form");
+                        form.setAttribute("action", "http://192.168.10.10/schedule/outputcsv");
+                        form.setAttribute("method", "post");
+                        form.style.display = "none";
+                        document.body.appendChild(form);
+                        // data = {'2' : '2', '3' :'3'};
+                        // // パラメタの設定
+                        // if (data !== undefined) {
+                        //   for (var paramName in data) {
+                        //   var input = document.createElement('input');
+                        //   input.setAttribute('type', 'hidden');
+                        //   input.setAttribute('name', 'status['+ paramName +']');
+                        //   input.setAttribute('value', data[paramName]);
+                        //   form.appendChild(input);
+                        //   }
+                        // }
+                        var input = document.createElement('input');
+                        input.setAttribute('type', 'hidden');
+                        input.setAttribute('name', 'user_id');
+                        input.setAttribute('value', user_id);
+                        form.appendChild(input);
+                        // CSRFトークンを付与
+                        var input = document.createElement('input');
+                          input.setAttribute('type', 'hidden');
+                          input.setAttribute('name', '_token');
+                          input.setAttribute('value', token);
+                          form.appendChild(input);
+                        // submit
+                        form.submit();
+                    }).fail(function(jqXHR,textStatus,errorThrown){
+                        alert('ファイルの取得に失敗しました。');
+                        console.log("ajax通信に失敗しました")
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+  }
+
   $(function() {
   var headNav = $("#sub");
   // headNav.css({"top": '-200px'});
@@ -215,7 +317,16 @@
     <button type="submit" name="sub_gamen" id="sub_gamen" class="btn btn-primary">  
       登録画面
     </button>
+    <form  style="display:inline-block;" action="/" method="POST" class="form-horizontal" name="form1" onsubmit="CSVOutput();return false;">
+      <button type="submit" name="csvoutput" id="csvoutput" class="btn btn-secondary">  
+        ダウンロード
+      </button>
+      <?php if(isset($user)){ ?>
+        <input type="hidden" name="user_id" value="<?= $user ?>">
+      <?php }?>
+    </form>
   </div>
+</form>
   
   <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
     <div class="cd-schedule__timeline">
@@ -257,10 +368,27 @@
                 <em class="cd-schedule__name">Abs Circuit</em>
               </a>
             </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="10:00" data-end="11:00" data-content="create" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Abs Circuit</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="10:10" data-end="10:40" data-content="create" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Abs Circuit</em>
+              </a>
+            </li>
   
             <li class="cd-schedule__event">
               <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
                 <em class="cd-schedule__name">Rowing Workout</em>
+              </a>
+            </li>
+            <li class="cd-schedule__event">
+              <a data-start="12:30" data-end="13:30" data-content="create" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Abs Circuit</em>
               </a>
             </li>
   
@@ -302,7 +430,7 @@
           </ul>
         </li>
         -->
-
+        
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span>予定</span></div>
           <ul>
@@ -310,8 +438,8 @@
           ?>
           @foreach($schedules as $schedule)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="schedule/create" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">{{$schedule->text}}</em>
+              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" content-id={{$schedule->title}} date={{$date}} user-id={{$user}}>
+                <em class="cd-schedule__name">{{$schedule->title}}</em>
               </a>
             </li>
           @endforeach
@@ -327,8 +455,8 @@
           ?>
           @foreach($zisekis as $ziseki)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="schedule/create" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">{{$ziseki->text}}</em>
+              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="create" data-event="event-1" href="#0"  content-id={{$ziseki->id}} date={{$date}} user-id={{$user}}>
+                <em class="cd-schedule__name">{{$ziseki->title}}</em>
               </a>
             </li>
           @endforeach

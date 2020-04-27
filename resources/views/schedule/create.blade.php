@@ -60,7 +60,7 @@ background: #FFC93C;
 // debugger;
 $(function() {
 	var headNav = $("header");
-	//scrollだけだと読み込み時困るのでloadも追加
+	// scrollだけだと読み込み時困るのでloadも追加
 	// $(window).on('load scroll', function () {
   $('#sub_gamen').click(
     function(){
@@ -261,10 +261,71 @@ $(function() {
       var_dump("id is");
       var_dump($id);
   }?>
+  <?php if(isset($content_id)){
+      var_dump("content_id is");
+      var_dump($content_id);
+  }?>
+  <?php if(isset($result_array)){
+      var_dump("result_array is");
+      var_dump($result_array);
+  }?>
+  <?php
+      var_dump("cid is");
+      var_dump($cid);
+  ?>
+  <!--
   <form action="{{ url('/schedule/create')}}" method="POST" class="form-horizontal">
   <button type="submit" name="sub_gamen" id="sub_gamen">  
     sub_gamen_test
   </button>
   </form>
+  -->
+  <?php if(isset($schedules)){
+          ?>
+          @foreach($schedules as $schedule)
+            <!--
+            <li class="cd-schedule__event">
+              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" content-id="8">
+                <em class="cd-schedule__name">{{$schedule->text}}</em>
+              </a>
+            </li>
+            -->
+            <form action="{{ url('/schedule/change')}}" method="POST" class="form-horizontal">
+            @csrf
+            <?php
+              // 開始時刻の初期値を取得
+              preg_match("/(?P<zikan>\d+):(?P<hun>\d+):(?P<byo>\d+)/",$schedule->from_time,$m);
+              $from_time = $m['zikan'] . ":" . $m['hun'];
+              // 終了時刻の初期値を取得
+              preg_match("/(?P<zikan>\d+):(?P<hun>\d+):(?P<byo>\d+)/",$schedule->to_time,$n);
+              $to_time = $n['zikan'] . ":" . $n['hun'];
+            ?>
+            <li>タイトル:<input type="text" name="title" value={{$schedule->title}}></li>
+            <li>開始時刻:<input type="time" name="start-time" value={{$from_time}}></li>
+            <li>終了時刻:<input type="time" name="end-time" value={{$to_time}}></li>
+            <li>内容:<textarea name="text" cols="50" rows="10">{{$schedule->text}}</textarea></li>
+            <input type="hidden" name="schedule_id" value={{$cid}}>
+            <input type="hidden" name="date" value={{$date}}>
+            <input type="hidden" name="user_id" value={{$user}}>
+          @endforeach
+
+          <button type="submit" name="change">
+            変更
+          </button>
+          </form>
+
+          <form action="{{ url('/schedule/delete')}}" method="POST" class="form-horizontal">
+            @csrf
+            <input type="hidden" name="schedule_id" value={{$cid}}>
+            <input type="hidden" name="date" value={{$date}}>
+            <input type="hidden" name="user_id" value={{$user}}>
+
+          <button type="submit" name="delete">
+            削除
+          </button>
+          </form>
+          <?php
+  }?>
+  
   </div>
 </div>

@@ -113,8 +113,12 @@
 		this.modalDate.textContent = target.getAttribute('data-start')+' - '+target.getAttribute('data-end');
 		this.modal.setAttribute('data-event', target.getAttribute('data-event'));
 
+		var content_id = target.getAttribute('content-id');
+		var date = target.getAttribute('date');
+		var user_id = target.getAttribute('user-id');
+
 		//update event content
-		this.loadEventContent(target.getAttribute('data-content'));
+		this.loadEventContent(target.getAttribute('data-content'),content_id,date,user_id);
 
 		Util.addClass(this.modal, 'cd-schedule-modal--open');
 		
@@ -290,9 +294,11 @@
 		}
 	};
 
-	ScheduleTemplate.prototype.loadEventContent = function(content) {
+	ScheduleTemplate.prototype.loadEventContent = function(content,content_id,date,user_id) {
 		// load the content of an event when user selects it
 		var self = this;
+
+		// console.log(content_id);
 
 		httpRequest = new XMLHttpRequest();
 		httpRequest.onreadystatechange = function() {
@@ -305,10 +311,37 @@
 		};
 		// httpRequest.open('GET', content+'.html');
 		//ここは要検証!
+		if(content !== "schedule/create"){
+			// 確認するとscheduleが渡ってこない場合が正常みたい...
+			// でも渡ってくる場合はなぜ怒っていたのだろう...
+			content = "schedule/" + content;
+		}
+
+		var param = "";
+		// コンテンツIDが渡ってきている場合
+		// if(content_id && date && user_id){
+		if(content_id){
+			param = "?content_id=" + content_id + "&date=" + date + "&user=" + user_id;
+		}
+
+		console.log(param);
+
 		console.dir(content);
 		// content = "schedule/" + content;
-		httpRequest.open('GET', content);
-    	httpRequest.send();
+		if(!param){
+			httpRequest.open('GET', content);
+    		httpRequest.send();
+		}else{
+			// var token = document.getElementsByName('csrf-token').item(0).content;
+			// console.log(param);
+			// httpRequest.open('POST', content,true);
+			// httpRequest.setRequestHeader('X-CSRF-Token', token);
+			// httpRequest.send(param);
+
+			httpRequest.open('GET', content + param ,true);
+    		httpRequest.send();
+		}
+		
 	};
 
 	ScheduleTemplate.prototype.getEventContent = function(string) {

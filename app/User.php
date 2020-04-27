@@ -3,8 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
+// class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
