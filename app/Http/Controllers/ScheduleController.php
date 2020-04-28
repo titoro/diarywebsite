@@ -133,8 +133,8 @@ class ScheduleController extends Controller
                 "id" => $id,
                 // "content_id" => $content_id
                 "result_array" => $result_array,
-                "cid" => $cid
-                // "user" => $user,
+                "cid" => $cid,
+                "user" => $user,
              ]);
         }
         
@@ -176,6 +176,8 @@ class ScheduleController extends Controller
         //     'comment' => 'test'
 
         // ];
+        $date = $request->input('date');
+        $user_id = $request->input('user_id');
 
         // $dayschedule = DaySchedule::create([
         //                                     'id' => '1',
@@ -188,7 +190,8 @@ class ScheduleController extends Controller
         // $ds1->contents()->create($content_array);
 
         // 選択した日付へ飛ばす
-        return view('schedule.index');
+        // return view('schedule.index');
+        return redirect('/schedule?date='. $date .'&user=' .$user_id);
     }
 
     public function change(Request $request){
@@ -343,7 +346,12 @@ class ScheduleController extends Controller
         // foreach ($data as $row) {
         //     fputcsv($fp, $row, ',', '"');
         // }
-        fputcsv($fp, $result[0], ',', '"');
+        if($result){
+            fputcsv($fp, $result[0], ',', '"');
+        }else{
+            fputcsv($fp, '', ',', '"');
+        }
+        // fputcsv($fp, $result[0], ',', '"');
         fclose($fp);
         header('Content-Type: application/octet-stream');
         header("Content-Disposition: attachment; filename={$file_name}");

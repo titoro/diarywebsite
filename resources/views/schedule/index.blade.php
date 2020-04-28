@@ -77,6 +77,13 @@
   <script src="{{ asset('js/app.js') }}" defer></script>
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+  <!-- <link href="{{ asset('css/c3/c3.css') }}" rel="stylesheet"> -->
+  <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+  <!-- <script src="{{ asset('js/c3/c3.js') }}" defer></script> -->
+  <!-- <script src="{{ asset('js/c3/c3.mina.js') }}" defer></script> -->
+  <!-- <script src="{{ asset('js/c3/c3.esm.js') }}" defer></script> -->
+  
+
 <script>  
 function CSVOutput(){
                     var flag = false; // 選択されているか否かを判定する変数
@@ -92,8 +99,11 @@ function CSVOutput(){
                     //     result[i] = document.form1.riyu[i].value;
                     //   }
                     // }
-
-                    let user_id = document.form1.user_id.value;
+                    // let user_id = 1;
+                    console.log(document.form1.user_id);
+                    let user_id = 1;
+                    // let user_id = document.form1.user_id.value ? document.form1.user_id.value : 0;
+                    
                     // alert(user_id);
                     result['user_id'] = user_id; 
                     // console.log(result);
@@ -109,7 +119,7 @@ function CSVOutput(){
                     }).done(function (results){
                         //$('#text').html(results);//展開したいタグのidを指定
                         // console.log(results);
-                        alert(results);
+                        // alert(results);
                         alert(results['count'] + "件あります");
                         var token = document.getElementsByName('csrf-token').item(0).content;
                         // console.log(token);
@@ -176,7 +186,7 @@ function CSVOutput(){
   $(function() {
   var headNav = $("#sub");
   // headNav.css({"top": '-200px'});
-	//scrollだけだと読み込み時困るのでloadも追加
+	// scrollだけだと読み込み時困るのでloadも追加
 	// $(window).on('load scroll', function () {
   $('#sub_gamen').click(
     function(){
@@ -213,6 +223,7 @@ function CSVOutput(){
 		// }
 	});
 });
+
 </script>
 </head>
 <body>
@@ -222,19 +233,19 @@ function CSVOutput(){
     <p class="margin-top-md margin-bottom-xl">👈 <a class="cd-article-link" href="https://codyhouse.co/gem/schedule-template">Article &amp; Download</a></p>
     -->
 
-    <h1 class="text-xl"><?php if(isset($date)){echo $date;}else{echo date("yy-m-d");} ?>の予定表</h1>
+    <h1 class="text-xl"><?php if(isset($date)){echo $date;}else{echo date("yy-m-d");} ?>の予定表</h1><a href="/">カレンダーに戻る</a>
 
     <!--
     <a href="{{ action('ScheduleController@create', 1) }}">スケジュールを登録する</a>
     <a href="http://192.168.10.10/schedule/1">スケジュールを登録する(url)</a> 
     -->
     <?php if(isset($result)){
-      var_dump("result is");
-      var_dump($result);
+      // var_dump("result is");
+      // var_dump($result);
     }?>
     <?php if(isset($date)){
-      var_dump("date is");
-      var_dump($date);
+      // var_dump("date is");
+      // var_dump($date);
     }?>
     <?php if(isset($user)){
       var_dump("user is");
@@ -299,7 +310,9 @@ function CSVOutput(){
       <br>
       -->
       <!-- デフォルトでは今日の日付（どうするか考える） -->
-      <input type="hidden" name="date" value="<?php if(isset($date)){echo $date;}else{echo date("yy-m-d");} ?>">
+      <input type="hidden" name="date" value={{$date}}>
+      <input type="hidden" name="user_id" value={{$user}}>
+      <!-- <input type="hidden" name="date" value="<?php //if(isset($date)){echo $date;}else{echo date("yy-m-d");} ?>"> -->
     </table>
       <button type="submit" name="add">
         登録
@@ -438,7 +451,7 @@ function CSVOutput(){
           ?>
           @foreach($schedules as $schedule)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" content-id={{$schedule->title}} date={{$date}} user-id={{$user}}>
+              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="yotei" title={{$schedule->title}} content-id={{$schedule->id}} date={{$date}} user-id={{$user}}>
                 <em class="cd-schedule__name">{{$schedule->title}}</em>
               </a>
             </li>
@@ -455,7 +468,7 @@ function CSVOutput(){
           ?>
           @foreach($zisekis as $ziseki)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="create" data-event="event-1" href="#0"  content-id={{$ziseki->id}} date={{$date}} user-id={{$user}}>
+              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="ziseki" title={{$ziseki->title}} content-id={{$ziseki->id}} date={{$date}} user-id={{$user}}>
                 <em class="cd-schedule__name">{{$ziseki->title}}</em>
               </a>
             </li>
@@ -572,7 +585,147 @@ function CSVOutput(){
     <div class="cd-schedule__cover-layer"></div>
   </div> <!-- .cd-schedule -->
 
+  <div style="margin-left:10px;">累計時間の比較(1日)</div>
+  <div id="chart"></div>
+  <div style="margin-left:10px;">スケジュール遵守率(1日)</div>
+  <div id="chart2"></div>
+
   <script src="{{ asset('/js/schedule-template/util.js') }}"></script> <!-- util functions included in the CodyHouse framework -->
   <script src="{{ asset('/js/schedule-template/main.js') }}"></script>
+  <link rel = "stylesheet" type = "text/css" href = "https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+  <script src = "http://d3js.org/d3.v3.min.js" charset = "utf-8"> </script>
+  <script src = "https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"> </script>
+  <script>
+    function array_key_exists ( key, search ) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Felix Geisendoerfer (http://www.debuggable.com/felix)
+    // *     example 1: array_key_exists('kevin', {'kevin': 'van Zonneveld'});
+    // *     returns 1: true
+ 
+    // input sanitation
+    if( !search || (search.constructor !== Array && search.constructor !== Object) ){
+        return false;
+    }
+ 
+    return key in search;
+    }
+
+
+    // 予定の時間累計を出す
+    let yotei_ruikei_zikan = 0;
+    let yotei_zikan_elements = document.getElementsByClassName('yotei');
+    console.log(yotei_zikan_elements[0]);
+
+    let yotei_zikan_array = Array.prototype.slice.call(yotei_zikan_elements);
+
+    yotei_zikan_array.forEach(function(element){
+      let tmp_date = element.getAttribute("date");
+      let tmp_yotei_zikan_start_time = element.getAttribute("data-start");
+      let tmp_yotei_zikan_end_time = element.getAttribute("data-end");
+
+      date1 = new Date(tmp_date + " " + tmp_yotei_zikan_start_time + ":00");
+      date2 = new Date(tmp_date + " " + tmp_yotei_zikan_end_time + ":00");
+      console.log(date1);
+
+      const time1 = date2.getTime() - date1.getTime();
+      const sabun_hun = Math.floor(time1 / (1000 * 60 ));
+
+      console.log(sabun_hun);
+      
+      yotei_ruikei_zikan += sabun_hun;
+    });
+
+    // 実績の時間累計を出す
+    let ziseki_ruikei_zikan = 0;
+    let ziseki_zikan_elements = document.getElementsByClassName('ziseki');
+    console.log(ziseki_zikan_elements[0]);
+
+    let ziseki_zikan_array = Array.prototype.slice.call(ziseki_zikan_elements);
+
+    ziseki_zikan_array.forEach(function(element){
+      let tmp_date = element.getAttribute("date");
+      let tmp_ziseki_zikan_start_time = element.getAttribute("data-start");
+      let tmp_ziseki_zikan_end_time = element.getAttribute("data-end");
+
+      date1 = new Date(tmp_date + " " + tmp_ziseki_zikan_start_time + ":00");
+      date2 = new Date(tmp_date + " " + tmp_ziseki_zikan_end_time + ":00");
+      console.log(date1);
+
+      const time1 = date2.getTime() - date1.getTime();
+      const sabun_hun = Math.floor(time1 / (1000 * 60 ));
+
+      console.log(sabun_hun);
+      
+      ziseki_ruikei_zikan += sabun_hun;
+    });
+    
+    // スケジュール遵守率の算出
+    let yotei_sosu = yotei_zikan_array.length;
+    let yotei_dori_count = 0;
+    ziseki_zikan_array.forEach(function(element){
+      let title = element.getAttribute("title");
+      let ziseki_zikan_start_time = element.getAttribute("data-start");
+      let ziseki_zikan_end_time = element.getAttribute("data-end");
+      yotei_zikan_array.forEach(function(element2){
+        if(title == element2.getAttribute("title")){
+          console.log(element2);
+          console.log(ziseki_zikan_start_time);
+          console.log(element2.getAttribute("data-start"));
+          console.log(ziseki_zikan_end_time);
+          console.log(element2.getAttribute("data-end"));
+          if(ziseki_zikan_start_time == element2.getAttribute("data-start")
+              && ziseki_zikan_end_time == element2.getAttribute("data-end")){
+                yotei_dori_count = yotei_dori_count + 1;
+              }
+        }
+      });
+    });
+
+
+
+    var chart = c3.generate({
+    bindto: '#chart',
+    data: {
+      columns: [
+        ['予定', yotei_ruikei_zikan],
+        ['実績', ziseki_ruikei_zikan]
+      ],
+      type: 'bar'
+    }
+    });
+
+    console.log(yotei_dori_count);
+    console.log(yotei_sosu / yotei_dori_count);
+
+    var chart2 = c3.generate({
+    bindto: '#chart2',
+    data: {
+        // iris data from R
+        columns: [
+            ['予定達成', (yotei_dori_count/ yotei_sosu) * 100 ],
+            ['予定達成できず', 100 - ((yotei_dori_count/ yotei_sosu) * 100)],
+            // ['L', 60],
+        ],
+        type: 'pie'
+    }
+    });
+
+    // setTimeout(function () {
+    //     chart.transform('bar', 'data1');
+    // }, 1000);
+
+    // setTimeout(function () {
+    //     chart.transform('bar', 'data2');
+    // }, 2000);
+
+    // setTimeout(function () {
+    //     chart.transform('line');
+    // }, 3000);
+
+    // setTimeout(function () {
+    //     chart.transform('bar');
+    // }, 1000);
+  </script>
 </body>
 </html>
