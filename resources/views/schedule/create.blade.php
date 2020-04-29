@@ -256,22 +256,23 @@ $(function() {
 </button>
 
 <div class="cd-schedule-modal__event-info">
-  <div><div>aaaaa</div>
+  <div>
+  <!-- <div>aaaaa</div> -->
   <?php if(isset($id)){
-      var_dump("id is");
-      var_dump($id);
+      // var_dump("id is");
+      // var_dump($id);
   }?>
   <?php if(isset($content_id)){
-      var_dump("content_id is");
-      var_dump($content_id);
+      // var_dump("content_id is");
+      // var_dump($content_id);
   }?>
   <?php if(isset($result_array)){
-      var_dump("result_array is");
-      var_dump($result_array);
+      // var_dump("result_array is");
+      // var_dump($result_array);
   }?>
   <?php
-      var_dump("cid is");
-      var_dump($cid);
+      // var_dump("cid is");
+      // var_dump($cid);
   ?>
   <!--
   <form action="{{ url('/schedule/create')}}" method="POST" class="form-horizontal">

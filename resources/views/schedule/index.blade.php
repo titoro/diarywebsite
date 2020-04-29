@@ -248,8 +248,8 @@ function CSVOutput(){
       // var_dump($date);
     }?>
     <?php if(isset($user)){
-      var_dump("user is");
-      var_dump($user);
+      // var_dump("user is");
+      // var_dump($user);
     }?>
   </header>
 
@@ -258,14 +258,14 @@ function CSVOutput(){
 		<ul class="g-nav-menu">
     <table style="margin:0 auto;">
     
-    <form action="{{ url('/schedule/insert')}}" method="POST" class="form-horizontal">
+    <form action="{{ url('/schedule/insert')}}" method="POST" class="form-horizontal" onsubmit="submitAfterCheckZikoku();return false;">
       @csrf
       <tr>
         <td align="right">
           開始時間：
         </td>
         <td align="left">
-          <input type="time" name="start-time"><br>
+          <input type="time" name="start-time" id="start-time"><br>
         </td>
       </tr>
       <tr>
@@ -273,7 +273,7 @@ function CSVOutput(){
           終了時間：
         </td>
         <td align="left">
-          <input type="time" name="end-time"><br>
+          <input type="time" name="end-time" id="end-time"><br>
         </td>
       </tr>
       <tr>
@@ -366,6 +366,7 @@ function CSVOutput(){
         <li><span>18:30</span></li>
         <li><span>19:00</span></li>
         <li><span>19:30</span></li>
+        <li><span>20:00</span></li>
       </ul>
     </div> <!-- .cd-schedule__timeline -->
   
@@ -596,6 +597,29 @@ function CSVOutput(){
   <script src = "http://d3js.org/d3.v3.min.js" charset = "utf-8"> </script>
   <script src = "https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"> </script>
   <script>
+    // 時刻の入力チェックをしてから登録する
+    function submitAfterCheckZikoku(){
+      let start_time = document.getElementById("start-time").value;
+      let end_time = document.getElementById("end-time").value;
+
+      // 暫定的
+      date1 = new Date("2020-04-01" + " " + start_time + ":00");
+      date2 = new Date("2020-04-01" + " " + end_time + ":00");
+
+      console.log(date1.getTime());
+      console.log(date2.getTime());
+
+      let diff = date2.getTime() - date1.getTime();
+      console.log(diff);
+      if(diff < 0){
+        alert("終了時刻は開始時刻より後を指定してください");
+        return false;
+      }
+      // submit()でフォームの内容を送信
+      document.add.submit();
+      // alert("正常です");
+    }
+
     function array_key_exists ( key, search ) {
     // http://kevin.vanzonneveld.net
     // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)

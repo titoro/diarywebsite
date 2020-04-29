@@ -404,7 +404,7 @@ Docs & License: https://fullcalendar.io/
                 console.log(typeof(matchedChild['dataset']['goto']));
                 date = JSON.parse(matchedChild['dataset']['goto']).date;
                 // console.dir(document.getElementById("user").innerHTML);
-                user = document.getElementById("user").innerHTML;
+                user = document.getElementById("user").value;
                 // console.log("date is "+date);
             }
             for ( var n in matchedChild ) {

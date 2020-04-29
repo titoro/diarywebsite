@@ -11,12 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware('auth');
-Route::post('/', function () {
-    return view('welcome');
-})->middleware('auth');
+// Route::get('/', function () { return view('welcome');})->middleware('auth');
+// Route::post('/', function () { return view('welcome');})->middleware('auth');
+Route::match(['get', 'post'],'/', 'WelcomeController@index');
 Route::get('hello','HelloController@index');
 Route::post('hello','HelloController@post');
 Route::get('user','UserController@index');

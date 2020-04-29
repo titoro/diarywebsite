@@ -370,12 +370,10 @@
                 </div>
             </div>
         </div>
-  -->
-  
-  <div id="user">test user</div>
+        -->
+  <input type="hidden" id="user" value={{$user_id ?? ''}}></input>
   <div id='calendar-container'>
     <div id='calendar'></div>
   </div>
-  
 </body>
 </html>
