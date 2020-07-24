@@ -13,7 +13,7 @@
 
 // Route::get('/', function () { return view('welcome');})->middleware('auth');
 // Route::post('/', function () { return view('welcome');})->middleware('auth');
-Route::match(['get', 'post'],'/', 'WelcomeController@index');
+Route::match(['get', 'post'],'/', 'WelcomeController@index')->middleware('auth');
 Route::get('hello','HelloController@index');
 Route::post('hello','HelloController@post');
 Route::get('user','UserController@index');

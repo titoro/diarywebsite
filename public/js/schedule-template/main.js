@@ -116,9 +116,10 @@
 		var content_id = target.getAttribute('content-id');
 		var date = target.getAttribute('date');
 		var user_id = target.getAttribute('user-id');
+		var type = target.getAttribute('type');
 
 		//update event content
-		this.loadEventContent(target.getAttribute('data-content'),content_id,date,user_id);
+		this.loadEventContent(target.getAttribute('data-content'),content_id,date,user_id,type);
 
 		Util.addClass(this.modal, 'cd-schedule-modal--open');
 		
@@ -313,7 +314,7 @@
 		//ここは要検証!
 		if(content !== "schedule/create"){
 			// 確認するとscheduleが渡ってこない場合が正常みたい...
-			// でも渡ってくる場合はなぜ怒っていたのだろう...
+			// でも渡ってくる場合はなぜ渡っていたのだろう...
 			content = "schedule/" + content;
 		}
 
@@ -321,7 +322,7 @@
 		// コンテンツIDが渡ってきている場合
 		// if(content_id && date && user_id){
 		if(content_id){
-			param = "?content_id=" + content_id + "&date=" + date + "&user=" + user_id;
+			param = "?content_id=" + content_id + "&date=" + date + "&user=" + user_id + "&type=" + type;
 		}
 
 		console.log(param);

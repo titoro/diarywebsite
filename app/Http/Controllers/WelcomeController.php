@@ -18,12 +18,16 @@ class WelcomeController extends Controller
         // $array = [1,2,3];
 
         // dd($array);
-
-        // 指定されたビューを返す
-        return view('welcome')->with([
-            "user_id" => $user->id,
-            // "user" => $user
-        ]);
+        if($user){
+            // 指定されたビューを返す
+            return view('welcome')->with([
+                "user_id" => $user->id,
+                // "user" => $user
+            ]);
+        }else{
+            return view('welcome');
+        }
+        
     }
     // ここまで追加
 }

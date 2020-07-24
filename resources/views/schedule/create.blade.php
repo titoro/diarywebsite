@@ -256,6 +256,8 @@ $(function() {
 </button>
 
 <div class="cd-schedule-modal__event-info">
+  <script src="{{ asset('js/app.js') }}" defer></script>
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <div>
   <!-- <div>aaaaa</div> -->
   <?php if(isset($id)){
@@ -291,7 +293,8 @@ $(function() {
               </a>
             </li>
             -->
-            <form action="{{ url('/schedule/change')}}" method="POST" class="form-horizontal">
+            <!-- <div> -->
+            <form action="{{ url('/schedule/change')}}" method="POST" class="form-horizontal" style="margin-top:10px;display:inline-block;">
             @csrf
             <?php
               // 開始時刻の初期値を取得
@@ -310,21 +313,37 @@ $(function() {
             <input type="hidden" name="user_id" value={{$user}}>
           @endforeach
 
-          <button type="submit" name="change">
+          <button type="submit" name="change" class="btn btn-primary">
             変更
           </button>
           </form>
+          <!-- </div> -->
 
-          <form action="{{ url('/schedule/delete')}}" method="POST" class="form-horizontal">
+          <!-- <div> -->
+          <form action="{{ url('/schedule/delete')}}" method="POST" class="form-horizontal"  style="margin-top:10px;display:inline-block;">
             @csrf
             <input type="hidden" name="schedule_id" value={{$cid}}>
             <input type="hidden" name="date" value={{$date}}>
             <input type="hidden" name="user_id" value={{$user}}>
 
-          <button type="submit" name="delete">
+          <button type="submit" name="delete" class="btn btn-secondary">
             削除
           </button>
           </form>
+          <!-- </div> -->
+
+          <!-- <div> -->
+          <form action="{{ url('/schedule/copy')}}" method="POST" class="form-horizontal" style="margin-top:10px;display:inline-block;">
+            @csrf
+            <input type="hidden" name="schedule_id" value={{$cid}}>
+            <input type="hidden" name="date" value={{$date}}>
+            <input type="hidden" name="user_id" value={{$user}}>
+            <input type="hidden" name="type" value={{$type}}>
+          <button type="submit" name="delete" class="btn btn-success">
+            コピー
+          </button>
+          </form>
+          <!-- </div> -->
           <?php
   }?>
   
