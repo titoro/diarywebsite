@@ -108,6 +108,8 @@ class ScheduleController extends Controller
         $cid = $request->input('content_id');
         $date = $request->input('date');
         $user_id = $request->input('user');
+        $type = $request->input('type');
+        
         // $cid = 1;
 
         if($cid){
@@ -125,7 +127,8 @@ class ScheduleController extends Controller
                 "cid" => $cid,
                 "schedules" => $schedules,
                 "date" => $date,
-                "user" => $user_id
+                "user" => $user_id,
+                "type" => $type
                 // "user" => $user,
              ]);
         }else{
@@ -135,6 +138,7 @@ class ScheduleController extends Controller
                 "result_array" => $result_array,
                 "cid" => $cid,
                 "user" => $user,
+                "type" => $type
              ]);
         }
         
@@ -309,6 +313,67 @@ class ScheduleController extends Controller
         // 選択した日付へ飛ばす
         // return view('schedule.index');
         return redirect('/schedule?date='. $date .'&user=' .$user_id);
+    }
+
+    public function copy(Request $request){
+        // $post = Post::findOrFail($id);
+        $post['id'] = 1;
+
+        $content_id = 0;
+        $result_array = array();
+
+        // if(isset($_POST)){
+        //     $content_id = 1;
+        //     // $result = $_POST['result'];
+        //     foreach($_POST as $key => $value) {
+        //         $result_array[$key] = $value;
+        //         if($key === 'content_id'){
+        //             $content_id = $value;
+        //         }
+        //     }
+        // }
+
+        $cid = $request->input('content_id');
+        $date = $request->input('date');
+        $user_id = $request->input('user');
+        $type = $request->input('type');
+
+        $insert_yo_type = 0;
+        if($type === 1){
+            $insert_yo_type = 2;
+        }else{
+            $insert_yo_type = 1;
+        }
+        
+        // $cid = 1;
+
+        $schedules = Schedule::where('id',$cid)->get();
+
+        $schedule_array = [
+            // 'id' => 4,
+            // 'content_id' => 4,
+            'from_time'     => $schedules->from_time,
+            'to_time'       => $schedules->to_time,
+            'date'          => $schedules->date,
+            'user_id'       => $schedules->user_id,                                     //test用user
+            // 'from_time'     => $request->input('start-time').':00',
+            // 'to_time'       => $request->input('end-time').':00',
+            'title'         => $schedules->title,
+            'text'          => $schedules->text,
+            'type'          => $insert_yo_type,
+            // 'comment' => 'test'
+
+        ];
+
+        $ds1 = new Schedule($schedule_array);
+        $ds1->save();
+        // $ds1->contents()->create($content_array);
+
+        // 選択した日付へ飛ばす
+        // return view('schedule.index');
+        return redirect('/schedule?date='. $date .'&user=' .$user_id);
+        
+        // return view('schedule.create');
     }
 
     /**

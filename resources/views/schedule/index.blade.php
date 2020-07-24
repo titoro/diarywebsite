@@ -120,7 +120,10 @@ function CSVOutput(){
                         //$('#text').html(results);//展開したいタグのidを指定
                         // console.log(results);
                         // alert(results);
-                        alert(results['count'] + "件あります");
+                        // alert();
+                        if(!window.confirm(results['count'] + "件あります。ダウンロードしますか？")){
+                          return false;
+                        };
                         var token = document.getElementsByName('csrf-token').item(0).content;
                         // console.log(token);
 
@@ -363,10 +366,10 @@ function CSVOutput(){
         <li><span>17:00</span></li>
         <li><span>17:30</span></li>
         <li><span>18:00</span></li>
-        <li><span>18:30</span></li>
+        <!-- <li><span>18:30</span></li>
         <li><span>19:00</span></li>
         <li><span>19:30</span></li>
-        <li><span>20:00</span></li>
+        <li><span>20:00</span></li> -->
       </ul>
     </div> <!-- .cd-schedule__timeline -->
   
@@ -452,7 +455,7 @@ function CSVOutput(){
           ?>
           @foreach($schedules as $schedule)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="yotei" title={{$schedule->title}} content-id={{$schedule->id}} date={{$date}} user-id={{$user}}>
+              <a data-start="{{date('H:i',strtotime($schedule->from_time))}}" data-end="{{date('H:i',strtotime($schedule->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="yotei" title={{$schedule->title}} content-id={{$schedule->id}} date={{$date}} user-id={{$user}} type="1">
                 <em class="cd-schedule__name">{{$schedule->title}}</em>
               </a>
             </li>
@@ -469,7 +472,7 @@ function CSVOutput(){
           ?>
           @foreach($zisekis as $ziseki)
             <li class="cd-schedule__event">
-              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="ziseki" title={{$ziseki->title}} content-id={{$ziseki->id}} date={{$date}} user-id={{$user}}>
+              <a data-start="{{date('H:i',strtotime($ziseki->from_time))}}" data-end="{{date('H:i',strtotime($ziseki->to_time))}}"  data-content="create" data-event="event-1" href="#0" class="ziseki" title={{$ziseki->title}} content-id={{$ziseki->id}} date={{$date}} user-id={{$user}} type="2">
                 <em class="cd-schedule__name">{{$ziseki->title}}</em>
               </a>
             </li>
@@ -627,12 +630,12 @@ function CSVOutput(){
     // *     example 1: array_key_exists('kevin', {'kevin': 'van Zonneveld'});
     // *     returns 1: true
  
-    // input sanitation
-    if( !search || (search.constructor !== Array && search.constructor !== Object) ){
-        return false;
-    }
- 
-    return key in search;
+      // input sanitation
+      if( !search || (search.constructor !== Array && search.constructor !== Object) ){
+          return false;
+      }
+  
+      return key in search;
     }
 
 
